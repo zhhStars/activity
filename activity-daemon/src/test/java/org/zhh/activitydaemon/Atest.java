@@ -37,12 +37,14 @@ public class Atest {
          
         // 查询当前任务  1
         Task currentTask = taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        System.out.println(currentTask.getAssignee());
         System.out.println("第一次执行前，任务名称：" + currentTask.getName());
         taskService.complete(currentTask.getId());  // 执行任务
         
         
         // 查询当前任务  2
         currentTask = taskService.createTaskQuery().processInstanceId(pid).singleResult();
+        System.out.println(currentTask.getAssignee());
         System.out.println("第二次执行前，任务名称：" + currentTask.getName());
         taskService.complete(currentTask.getId());  // 执行任务
         
