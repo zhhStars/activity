@@ -1,12 +1,11 @@
 package org.zhh.activitydaemon;
 
-import java.util.List;
-
+import org.activiti.engine.IdentityService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,15 @@ public class Btest {
     RuntimeService runtimeService;
     @Autowired  
     private TaskService taskService;
-	
+    @Autowired
+    private IdentityService identityService;
+    
 	@Test
+	@Ignore
     public void TestStartProcess() {
+		
+		identityService.setAuthenticatedUserId("流程发起人id123");
+		
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("myProcess");
         String pid = pi.getId();
         System.out.println("流程创建成功，当前流程实例ID：" + pid);
@@ -35,16 +40,7 @@ public class Btest {
         Task currentTask = taskService.createTaskQuery().processInstanceId(pid).singleResult();
         System.out.println(currentTask.getAssignee());
         System.out.println("第一次执行前，任务名称：" + currentTask.getName());
-        
-        
-        //taskService.complete(currentTask.getId());  // 执行任务
+        taskService.complete(currentTask.getId());  // 执行任务
     }
 	
-	@Test
-	public void TestA(){
-		ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery().involvedUser("张三");
-		List<ProcessInstance> processInstanceList = query.listPage(1, 10);
-		System.out.println(processInstanceList);
-	}
-
 }
